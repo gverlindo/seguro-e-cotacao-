@@ -1,0 +1,1365 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Processo de Cotação - VERLAZ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: #e8e8e8;
+            padding: 20px 0;
+            border-right: 1px solid #ddd;
+        }
+
+        .logo {
+            padding: 0 20px 30px;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .logo .subtitle {
+            font-size: 12px;
+            color: #666;
+            margin-top: 2px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: #333;
+            text-decoration: none;
+            border-bottom: 1px solid #ddd;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .menu-item:hover {
+            background-color: #ddd;
+        }
+
+        .menu-item.active {
+            background-color: #d0d0d0;
+        }
+
+        .menu-item .icon {
+            margin-right: 10px;
+            width: 16px;
+            height: 16px;
+        }
+
+        .menu-item .arrow {
+            margin-left: auto;
+            font-size: 12px;
+        }
+
+        .logout {
+            color: #e74c3c !important;
+            margin-top: 20px;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            background-color: white;
+        }
+
+        .header {
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        .header h2 {
+            font-size: 24px;
+            font-weight: normal;
+            color: #333;
+        }
+
+        /* Form */
+        .form-section {
+            max-width: 800px;
+        }
+
+        .form-row {
+            display: flex;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+
+        .form-row label {
+            width: 250px;
+            font-size: 14px;
+            color: #333;
+            margin-right: 20px;
+        }
+
+        .form-row input,
+        .form-row select {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            background-color: #f9f9f9;
+        }
+
+        .form-row input:focus,
+        .form-row select:focus {
+            outline: none;
+            border-color: #007bff;
+            background-color: white;
+        }
+
+        .form-row.readonly input {
+            background-color: #e9ecef;
+            color: #6c757d;
+        }
+
+        .currency-row {
+            display: flex;
+            align-items: center;
+        }
+
+        .currency-row .currency {
+            background-color: #e9ecef;
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-right: none;
+            border-radius: 4px 0 0 4px;
+            font-size: 14px;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .currency-row input {
+            border-radius: 0 4px 4px 0;
+            text-align: right;
+        }
+
+        .percentage-row {
+            display: flex;
+            align-items: center;
+        }
+
+        .percentage-row input {
+            text-align: right;
+            margin-right: 10px;
+        }
+
+        .percentage-row .percent {
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* Buttons */
+        .button-row {
+            margin-top: 40px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.2s;
+        }
+
+        .btn-primary {
+            background-color: #333;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #555;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: #333;
+            border: 1px solid #333;
+        }
+
+        .btn-outline:hover {
+            background-color: #333;
+            color: white;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background-color: white;
+            border-radius: 8px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .modal-header {
+            border-bottom: 2px solid #333;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        .modal-header h3 {
+            font-size: 20px;
+            font-weight: normal;
+            color: #333;
+            margin: 0;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            color: #333;
+        }
+
+        .modal-form-row {
+            margin-bottom: 20px;
+        }
+
+        .modal-form-row label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .modal-form-row select,
+        .modal-form-row input[type="number"] {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            background-color: white;
+        }
+
+        .modal-form-row select:focus,
+        .modal-form-row input[type="number"]:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        .modal-buttons {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+        }
+
+        /* Loading Styles */
+        .loading-container {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #333;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 16px;
+            color: #666;
+        }
+
+        /* Result Styles */
+        .result-container {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .result-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #28a745;
+            margin: 20px 0;
+        }
+
+        .result-description {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .result-time {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .result-disclaimer {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 30px;
+        }
+
+        /* Flash animation */
+        @keyframes flashRedMore {
+            0%, 100% { background-color: #f9f9f9; color: #333; border-color: #ccc; }
+            25%, 75% { background-color: #ffcccc; color: #cc0000; border-color: #cc0000; }
+        }
+
+        .flash-red-more {
+            animation: flashRedMore 0.8s linear 3;
+        }
+
+        /* Icons */
+        .icon-edit::before {
+            content: "✏️";
+        }
+
+        .icon-link::before {
+            content: "🔗";
+        }
+
+        .icon-return::before {
+            content: "↩️";
+        }
+
+        .icon-calculator::before {
+            content: "🧮";
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                order: 2;
+            }
+
+            .main-content {
+                order: 1;
+                padding: 20px;
+            }
+
+            .form-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .form-row label {
+                width: 100%;
+                margin-bottom: 5px;
+                margin-right: 0;
+            }
+
+            .button-row {
+                flex-direction: column;
+            }
+
+            .modal {
+                width: 95%;
+                padding: 20px;
+            }
+
+            .modal-buttons {
+                flex-direction: column;
+            }
+
+            .result-buttons {
+                flex-direction: column;
+            }
+        }
+
+        /* New styles for insurance buttons */
+        .insurance-buttons {
+            display: flex;
+            gap: 10px;
+            margin-left: 10px; /* Align with frete button */
+        }
+
+        .insurance-buttons .btn {
+            padding: 8px 15px;
+            font-size: 13px;
+        }
+
+        .insurance-buttons .btn-info {
+            background-color: #17a2b8;
+            color: white;
+        }
+
+        .insurance-buttons .btn-info:hover {
+            background-color: #138496;
+        }
+
+        .insurance-buttons .btn-warning {
+            background-color: #ffc107;
+            color: #333;
+        }
+
+        .insurance-buttons .btn-warning:hover {
+            background-color: #e0a800;
+        }
+
+        .insurance-buttons .btn-light {
+            background-color: #f8f9fa;
+            color: #333;
+            border: 1px solid #ccc;
+        }
+
+        .insurance-buttons .btn-light:hover {
+            background-color: #e2e6ea;
+        }
+
+        /* Styles for the new insurance modal */
+        .insurance-modal-content {
+            padding: 20px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .insurance-modal-content h4 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .insurance-modal-content ul {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 20px;
+        }
+
+        .insurance-modal-content ul li {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .insurance-modal-content ul li::before {
+            content: '✅';
+            position: absolute;
+            left: 0;
+            color: #28a745;
+        }
+
+        .insurance-modal-content p {
+            margin-bottom: 15px;
+        }
+
+        .insurance-modal-content .highlight {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .insurance-modal-content .note {
+            font-style: italic;
+            color: #666;
+            font-size: 12px;
+        }
+
+        /* New styles for the table */
+        .coverage-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .coverage-table th,
+        .coverage-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .coverage-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        .coverage-table .coverage-title {
+            font-weight: bold;
+        }
+
+        .coverage-table .coverage-description {
+            font-size: 13px;
+            color: #555;
+        }
+
+        .coverage-table .coverage-percentage {
+            white-space: nowrap;
+        }
+
+        .coverage-table .coverage-details {
+            font-size: 12px;
+            color: #777;
+        }
+
+        /* Flash animation */
+        @keyframes flashRedMore {
+            0%, 100% { background-color: #f9f9f9; color: #333; border-color: #ccc; }
+            25%, 75% { background-color: #ffcccc; color: #cc0000; border-color: #cc0000; }
+        }
+
+        .flash-red-more {
+            animation: flashRedMore 0.8s linear 3;
+        }
+
+        /* New styles for result time and disclaimer */
+        .result-time-label {
+            font-size: 14px;
+            color: #666;
+            margin-top: 15px;
+            margin-bottom: 5px;
+        }
+
+        .result-time-value {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .result-disclaimer-small {
+            font-size: 11px;
+            color: #999;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .ncm-description {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <h1>VZ</h1>
+                <div class="subtitle">VERLAZ</div>
+            </div>
+            
+            <div class="menu-item">
+                <span class="icon">👤</span>
+                Menu Negócio
+                <span class="arrow">▼</span>
+            </div>
+            
+            <div class="menu-item">
+                <span class="icon">📋</span>
+                Cadastros
+                <span class="arrow">▼</span>
+            </div>
+            
+            <div class="menu-item">
+                <span class="icon">🚛</span>
+                Semáforos
+                <span class="arrow">▼</span>
+            </div>
+            
+            <div class="menu-item">
+                <span class="icon">💼</span>
+                Business
+                <span class="arrow">▼</span>
+            </div>
+            
+            <div class="menu-item">
+                <span class="icon">🧠</span>
+                Inteligência
+                <span class="arrow">▼</span>
+            </div>
+            
+            <div class="menu-item">
+                <span class="icon">❓</span>
+                Suporte
+                <span class="arrow">▼</span>
+            </div>
+            
+            <div class="menu-item logout">
+                <span class="icon">🚪</span>
+                Sair do Sistema
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <h2>Processo de Cotação</h2>
+            </div>
+
+            <div class="form-section">
+                <div class="form-row">
+                    <label>Processo de importação</label>
+                    <input type="text" value="Regular" readonly>
+                </div>
+
+                <div class="form-row">
+                    <label>Método de frete</label>
+                    <input type="text" value="FCL" readonly>
+                </div>
+
+                <div class="form-row">
+                    <label>Incoterm</label>
+                    <input type="text" value="FOB" readonly>
+                </div>
+
+                <div class="form-row">
+                    <label>Metros cúbicos</label>
+                    <input type="text" readonly>
+                </div>
+
+                <div class="form-row">
+                    <label>Total de contêineres</label>
+                    <input type="number" value="4" readonly>
+                </div>
+
+                <div class="form-row">
+                    <label>Desembaraço Aduaneiro</label>
+                    <input type="number" value="1" readonly>
+                </div>
+
+                <div class="form-row">
+                    <label>Frete internacional por contêiner</label>
+                    <div class="currency-row">
+                        <div class="currency">U$</div>
+                        <input type="text" value="3,500.00" readonly id="freteInternacionalInput">
+                    </div>
+                    <button class="btn btn-outline" id="btnCustoMedioFrete" style="margin-left: 10px;">
+                        <span class="icon-calculator"></span>
+                        Saiba Custo Médio de Frete
+                    </button>
+                </div>
+
+                <div class="form-row">
+                    <label>Seguro de carga pro processo</label>
+                    <div class="currency-row">
+                        <div class="currency">U$</div>
+                        <input type="text" value="0" readonly id="seguroCargaInput">
+                    </div>
+                    <div class="insurance-buttons">
+                        <button class="btn btn-light" id="btnSemSeguro">Sem Seguro</button>
+                        <button class="btn btn-info" id="btnVerCoberturas">Ver Coberturas</button>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <label>Serviços técnicos por processo</label>
+                    <div class="currency-row">
+                        <div class="currency">U$</div>
+                        <input type="text" value="0" readonly>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <label>Serviços comerciais por processo</label>
+                    <div class="currency-row">
+                        <div class="currency">U$</div>
+                        <input type="text" value="0" readonly>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <label>Comissão do agente</label>
+                    <div class="percentage-row">
+                        <input type="text" value="0" readonly>
+                        <span class="percent">%</span>
+                    </div>
+                </div>
+
+                <div class="button-row">
+                    <button class="btn btn-primary">
+                        <span class="icon-edit"></span>
+                        Editar Cotação
+                    </button>
+                    
+                    <button class="btn btn-secondary">
+                        <span class="icon-link"></span>
+                        Vincular Ordem de compra
+                    </button>
+                    
+                    <button class="btn btn-outline">
+                        <span class="icon-return"></span>
+                        Retornar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Cálculo de Frete -->
+    <div class="modal-overlay" id="modalFreteOverlay">
+        <div class="modal">
+            <button class="modal-close" id="modalClose">&times;</button>
+            
+            <!-- Formulário Inicial -->
+            <div id="modalFormStep">
+                <div class="modal-header">
+                    <h3>Calcular Custo Médio de Frete</h3>
+                </div>
+                
+                <div class="modal-form-row">
+                    <label for="paisOrigem">País de Origem:</label>
+                    <select id="paisOrigem" required>
+                        <option value="">Selecione o país de origem</option>
+                        <option value="china">China</option>
+                        <option value="estados-unidos">Estados Unidos</option>
+                        <option value="alemanha">Alemanha</option>
+                        <option value="japao">Japão</option>
+                        <option value="coreia-do-sul">Coreia do Sul</option>
+                        <option value="india">Índia</option>
+                        <option value="italia">Itália</option>
+                        <option value="franca">França</option>
+                        <option value="reino-unido">Reino Unido</option>
+                        <option value="mexico">México</option>
+                        <option value="canada">Canadá</option>
+                        <option value="espanha">Espanha</option>
+                        <option value="taiwan">Taiwan</option>
+                        <option value="tailandia">Tailândia</option>
+                        <option value="vietna">Vietnã</option>
+                        <option value="malasia">Malásia</option>
+                        <option value="indonesia">Indonésia</option>
+                        <option value="argentina">Argentina</option>
+                        <option value="chile">Chile</option>
+                        <option value="colombia">Colômbia</option>
+                        <option value="uruguai">Uruguai</option>
+                        <option value="paraguai">Paraguai</option>
+                        <option value="portugal">Portugal</option>
+                        <option value="holanda">Holanda</option>
+                        <option value="belgica">Bélgica</option>
+                    </select>
+                </div>
+                
+                <div class="modal-form-row">
+                    <label for="modalFrete">Modal de Frete:</label>
+                    <select id="modalFrete" required>
+                        <option value="">Selecione o modal de frete</option>
+                        <option value="maritimo">Marítimo (Container)</option>
+                        <option value="aereo">Embarque Aéreo</option>
+                    </select>
+                </div>
+
+                <div class="modal-form-row" id="ncmField" style="display: none;">
+                    <label for="ncm">NCM:</label>
+                    <select id="ncm">
+                        <option value="">Selecione o NCM</option>
+                        <option value="8471.30.12">8471.30.12 - Máquinas automáticas para processamento de dados portáteis</option>
+                        <option value="8517.12.31">8517.12.31 - Telefones celulares</option>
+                        <option value="9006.53.00">9006.53.00 - Câmeras fotográficas digitais</option>
+                        <option value="8528.72.00">8528.72.00 - Monitores e projetores</option>
+                        <option value="8471.50.10">8471.50.10 - Unidades de processamento</option>
+                        <option value="8517.62.59">8517.62.59 - Aparelhos para redes sem fio</option>
+                        <option value="8504.40.21">8504.40.21 - Fontes de alimentação ininterrupta (UPS)</option>
+                        <option value="8523.51.10">8523.51.10 - Cartões de memória</option>
+                        <option value="8543.70.99">8543.70.99 - Outros aparelhos elétricos com função própria</option>
+                        <option value="9018.90.99">9018.90.99 - Instrumentos e aparelhos para medicina</option>
+                        <option value="3004.90.69">3004.90.69 - Medicamentos</option>
+                        <option value="3923.21.90">3923.21.90 - Sacos e bolsas de plástico</option>
+                        <option value="6109.10.00">6109.10.00 - Camisetas de algodão</option>
+                        <option value="6403.91.90">6403.91.90 - Calçados com sola exterior de borracha</option>
+                        <option value="9503.00.99">9503.00.99 - Brinquedos</option>
+                        <option value="8703.23.10">8703.23.10 - Automóveis de passageiros</option>
+                        <option value="8421.21.00">8421.21.00 - Máquinas e aparelhos para filtrar ou purificar água</option>
+                        <option value="7321.11.00">7321.11.00 - Fogões e aquecedores de ambiente</option>
+                        <option value="9403.60.00">9403.60.00 - Outros móveis de madeira</option>
+                        <option value="7013.49.00">7013.49.00 - Artigos de vidro para mesa ou cozinha</option>
+                        <option value="6910.10.00">6910.10.00 - Pias, lavatórios, banheiras e outros artigos semelhantes</option>
+                        <option value="8418.21.00">8418.21.00 - Refrigeradores do tipo doméstico</option>
+                        <option value="8516.79.90">8516.79.90 - Outros aparelhos eletrotérmicos</option>
+                        <option value="9021.39.91">9021.39.91 - Próteses articulares</option>
+                        <option value="9021.39.99">9021.39.99 - Outras partes e acessórios de aparelhos de ortopedia</option>
+                    </select>
+                </div>
+
+                <div class="modal-form-row" id="pesoMercadoriaField" style="display: none;">
+                    <label for="pesoMercadoria">Peso da Mercadoria (kg):</label>
+                    <input type="number" id="pesoMercadoria" placeholder="Opcional: peso em kg">
+                </div>
+                
+                <div class="modal-buttons">
+                    <button type="button" class="btn btn-secondary" id="btnCancelarModal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btnCalcularFrete">Calcular Frete Médio</button>
+                </div>
+            </div>
+            
+            <!-- Tela de Loading -->
+            <div id="modalLoadingStep" style="display: none;">
+                <div class="loading-container">
+                    <div class="spinner"></div>
+                    <div class="loading-text">Consultando dados junto a empresas de frete...</div>
+                </div>
+            </div>
+            
+            <!-- Tela de Resultado -->
+            <div id="modalResultStep" style="display: none;">
+                <div class="modal-header">
+                    <h3>Resultado do Cálculo</h3>
+                </div>
+                
+                <div class="result-container">
+                    <div class="result-value" id="resultValue">U$ 0,00</div>
+                    <div class="result-description" id="resultDescription"></div>
+                    <div class="result-time-label">Tempo Estimado de Frete:</div>
+                    <div class="result-time-value" id="resultTime"></div>
+                    <div class="result-disclaimer-small">*Este é um valor estatístico. O valor real deve ser cotado com um agente de cargas.</div>
+                    
+                    <div class="result-buttons">
+                        <button type="button" class="btn btn-success" id="btnImportarValor">Importar Valor</button>
+                        <button type="button" class="btn btn-outline" id="btnNovaConsulta">Nova Consulta</button>
+                        <button type="button" class="btn btn-secondary" id="btnCancelarResultado">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Coberturas do Seguro -->
+    <div class="modal-overlay" id="modalCoberturasOverlay">
+        <div class="modal">
+            <button class="modal-close" id="modalCoberturasClose">&times;</button>
+            <div class="modal-header">
+                <h3>Coberturas e Vantagens do Seguro Internacional</h3>
+            </div>
+            <div class="insurance-modal-content">
+                <table class="coverage-table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Descrição</th>
+                            <th>Cobertura</th>
+                            <th>Detalhes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="coverage-title">Valor da Mercadoria</td>
+                            <td class="coverage-description">Proteção contra perda ou dano da carga.</td>
+                            <td class="coverage-percentage">Até 100%</td>
+                            <td class="coverage-details">🧩 Parcial: perda de 25% da carga → recebe 25% do valor da mercadoria.<br>📦 Total: perda completa da carga (sem DI) → recebe 100%.</td>
+                        </tr>
+                        <tr>
+                            <td class="coverage-title">Frete</td>
+                            <td class="coverage-description">Reembolso proporcional ao valor da mercadoria avariada.</td>
+                            <td class="coverage-percentage">Até 100%</td>
+                            <td class="coverage-details">🧩 Parcial: perda de 15% da carga → recebe 15% do valor do frete.<br>📦 Total: carga toda perdida → recebe 100% do frete.</td>
+                        </tr>
+                        <tr>
+                            <td class="coverage-title">Despesas Operacionais</td>
+                            <td class="coverage-description">Compensa custos extras com a importação.</td>
+                            <td class="coverage-percentage">Até 10%</td>
+                            <td class="coverage-details">🧩 Parcial: parte da carga vale R$ 15.000 → recebe até R$ 1.500.<br>📦 Total: carga toda perdida → recebe até 10% do valor total.</td>
+                        </tr>
+                        <tr>
+                            <td class="coverage-title">Lucro Estimado</td>
+                            <td class="coverage-description">Compensa o lucro que você deixaria de ganhar.</td>
+                            <td class="coverage-percentage">Até 10%</td>
+                            <td class="coverage-details">🧩 Parcial: perdeu R$ 20.000 em mercadoria → recebe até R$ 2.000.<br>📦 Total: perda total → até 10% do valor total da carga.</td>
+                        </tr>
+                        <tr>
+                            <td class="coverage-title">Impostos na Importação</td>
+                            <td class="coverage-description">Indenização pelos tributos pagos (com DI registrada).</td>
+                            <td class="coverage-percentage">25% sobre valor + frete proporcional</td>
+                            <td class="coverage-details">🧩 Parcial: parte perdida vale R$ 40.000 → recebe R$ 10.000.<br>📦 Sem DI: valor investido nessa cobertura é devolvido.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variáveis globais
+        let calculatedValue = 0;
+        const custoMercadoria = 20000; // USD
+        const percentualSeguro = 0.0030; // 0.30%
+        let seguroAtivo = true;
+        
+        // Dados simulados para cálculo (baseados em dados reais aproximados)
+        const freteData = {
+            'china': {
+                'maritimo': { custo_container: 2800, tempo_medio: '30-55 dias' },
+                'aereo': { custo_por_kg: 4.5, tempo_medio: '5-15 dias' }
+            },
+            'estados-unidos': {
+                'maritimo': { custo_container: 3200, tempo_medio: '30-55 dias' },
+                'aereo': { custo_por_kg: 5.2, tempo_medio: '5-15 dias' }
+            },
+            'alemanha': {
+                'maritimo': { custo_container: 2900, tempo_medio: '30-55 dias' },
+                'aereo': { custo_por_kg: 4.8, tempo_medio: '5-15 dias' }
+            },
+            'japao': {
+                'maritimo': { custo_container: 2600, tempo_medio: '30-55 dias' },
+                'aereo': { custo_por_kg: 4.2, tempo_medio: '5-15 dias' }
+            },
+            'coreia-do-sul': {
+                'maritimo': { custo_container: 2700, tempo_medio: '30-55 dias' },
+                'aereo': { custo_por_kg: 4.3, tempo_medio: '5-15 dias' }
+            },
+            'india': {
+                'maritimo': { custo_container: 2400, tempo_medio: '30-55 dias' },
+                'aereo': { custo_por_kg: 3.8, tempo_medio: '5-15 dias' }
+            },
+            'italia': {
+                'maritimo': { custo_container: 2800, tempo_medio: '30-55 dias' },
+                'aereo': { custo_por_kg: 4.6, tempo_medio: '5-15 dias' }
+            },
+            'franca': {
+                'maritimo': { custo_container: 2850, tempo_medio: '30-55 dias' },
+                'aereo': { custo_por_kg: 4.7, tempo_medio: '5-15 dias' }
+            },
+            'reino-unido': {
+                'maritimo': { custo_container: 2950, tempo_medio: '30-55 dias' },
+                'aereo': { custo_por_kg: 4.9, tempo_medio: '5-15 dias' }
+            },
+            'mexico': {
+                'maritimo': { custo_container: 2200, tempo_medio: '30-55 dias' },
+                'aereo': { custo_por_kg: 3.5, tempo_medio: '5-15 dias' }
+            },
+            'canada': {
+                'maritimo': { custo_container: 3100, tempo_medio: '30-55 dias' },
+                'aereo': { custo_por_kg: 5.0, tempo_medio: '5-15 dias' }
+            },
+            'espanha': {
+                'maritimo': { custo_container: 2750, tempo_medio: '30-55 dias' },
+                'aereo': { custo_por_kg: 4.4, tempo_medio: '5-15 dias' }
+            },
+            'taiwan': {
+                'maritimo': { custo_container: 2650, tempo_medio: '30-55 dias' },
+                'aereo': { custo_por_kg: 4.1, tempo_medio: '5-15 dias' }
+            },
+            'tailandia': {
+                'maritimo': { custo_container: 2300, tempo_medio: '30-55 dias' },
+                'aereo': { custo_por_kg: 3.6, tempo_medio: '5-15 dias' }
+            },
+            'vietna': {
+                'maritimo': { custo_container: 2250, tempo_medio: '30-55 dias' },
+                'aereo': { custo_por_kg: 3.4, tempo_medio: '5-15 dias' }
+            },
+            'malasia': {
+                'maritimo': { custo_container: 2350, tempo_medio: '30-55 dias' },
+                'aereo': { custo_por_kg: 3.7, tempo_medio: '5-15 dias' }
+            },
+            'indonesia': {
+                'maritimo': { custo_container: 2400, tempo_medio: '30-55 dias' },
+                'aereo': { custo_por_kg: 3.8, tempo_medio: '5-15 dias' }
+            },
+            'argentina': {
+                'maritimo': { custo_container: 1800, tempo_medio: '30-55 dias' },
+                'aereo': { custo_por_kg: 2.8, tempo_medio: '5-15 dias' }
+            },
+            'chile': {
+                'maritimo': { custo_container: 1900, tempo_medio: '30-55 dias' },
+                'aereo': { custo_por_kg: 3.0, tempo_medio: '5-15 dias' }
+            },
+            'colombia': {
+                'maritimo': { custo_container: 2000, tempo_medio: '30-55 dias' },
+                'aereo': { custo_por_kg: 3.2, tempo_medio: '5-15 dias' }
+            },
+            'uruguai': {
+                'maritimo': { custo_container: 1700, tempo_medio: '30-55 dias' },
+                'aereo': { custo_por_kg: 2.6, tempo_medio: '5-15 dias' }
+            },
+            'paraguai': {
+                'maritimo': { custo_container: 1650, tempo_medio: '30-55 dias' },
+                'aereo': { custo_por_kg: 2.5, tempo_medio: '5-15 dias' }
+            },
+            'portugal': {
+                'maritimo': { custo_container: 2700, tempo_medio: '30-55 dias' },
+                'aereo': { custo_por_kg: 4.3, tempo_medio: '5-15 dias' }
+            },
+            'holanda': {
+                'maritimo': { custo_container: 2800, tempo_medio: '30-55 dias' },
+                'aereo': { custo_por_kg: 4.5, tempo_medio: '5-15 dias' }
+            },
+            'belgica': {
+                'maritimo': { custo_container: 2750, tempo_medio: '30-55 dias' },
+                'aereo': { custo_por_kg: 4.4, tempo_medio: '5-15 dias' }
+            }
+        };
+
+        // Elementos do DOM
+        const modalFreteOverlay = document.getElementById('modalFreteOverlay');
+        const modalClose = document.getElementById('modalClose');
+        const btnCustoMedioFrete = document.getElementById('btnCustoMedioFrete');
+        const btnCancelarModal = document.getElementById('btnCancelarModal');
+        const btnCalcularFrete = document.getElementById('btnCalcularFrete');
+        const btnImportarValor = document.getElementById('btnImportarValor');
+        const btnNovaConsulta = document.getElementById('btnNovaConsulta');
+        const btnCancelarResultado = document.getElementById('btnCancelarResultado');
+        
+        const modalFormStep = document.getElementById('modalFormStep');
+        const modalLoadingStep = document.getElementById('modalLoadingStep');
+        const modalResultStep = document.getElementById('modalResultStep');
+        
+        const paisOrigem = document.getElementById('paisOrigem');
+        const modalFrete = document.getElementById('modalFrete');
+        const ncmField = document.getElementById('ncmField');
+        const ncmSelect = document.getElementById('ncm');
+        const pesoMercadoriaField = document.getElementById('pesoMercadoriaField');
+        const pesoMercadoriaInput = document.getElementById('pesoMercadoria');
+
+        const resultValue = document.getElementById('resultValue');
+        const resultDescription = document.getElementById('resultDescription');
+        const resultTime = document.getElementById('resultTime');
+        const freteInternacionalInput = document.getElementById('freteInternacionalInput');
+        const seguroCargaInput = document.getElementById('seguroCargaInput');
+        const btnSemSeguro = document.getElementById('btnSemSeguro');
+        const btnVerCoberturas = document.getElementById('btnVerCoberturas');
+        const modalCoberturasOverlay = document.getElementById('modalCoberturasOverlay');
+        const modalCoberturasClose = document.getElementById('modalCoberturasClose');
+
+        // Funções para controle do modal de frete
+        function openModalFrete() {
+            modalFreteOverlay.classList.add('active');
+            showFormStep();
+        }
+
+        function closeModalFrete() {
+            modalFreteOverlay.classList.remove('active');
+            resetFormFrete();
+        }
+
+        function showFormStep() {
+            modalFormStep.style.display = 'block';
+            modalLoadingStep.style.display = 'none';
+            modalResultStep.style.display = 'none';
+        }
+
+        function showLoadingStep() {
+            modalFormStep.style.display = 'none';
+            modalLoadingStep.style.display = 'block';
+            modalResultStep.style.display = 'none';
+        }
+
+        function showResultStep() {
+            modalFormStep.style.display = 'none';
+            modalLoadingStep.style.display = 'none';
+            modalResultStep.style.display = 'block';
+        }
+
+        function resetFormFrete() {
+            paisOrigem.value = '';
+            modalFrete.value = '';
+            ncmSelect.value = '';
+            pesoMercadoriaInput.value = '';
+            ncmField.style.display = 'none';
+            pesoMercadoriaField.style.display = 'none';
+            calculatedValue = 0;
+        }
+
+        function validateFormFrete() {
+            if (!paisOrigem.value || !modalFrete.value) {
+                return false;
+            }
+            if (modalFrete.value === 'aereo' && !ncmSelect.value) {
+                return false; // NCM é obrigatório para aéreo
+            }
+            return true;
+        }
+
+        function calculateFrete(pais, modal, peso) {
+            const data = freteData[pais];
+            if (!data || !data[modal]) {
+                return { value: 2500, time: 'N/A', custo_por_kg: 0 }; // Valor padrão se não encontrar dados
+            }
+
+            let value;
+            let custo_por_kg = 0;
+            const { custo_container, custo_por_kg: aereo_custo_por_kg, tempo_medio } = data[modal];
+            
+            switch (modal) {
+                case 'maritimo':
+                    value = custo_container;
+                    break;
+                case 'aereo':
+                    custo_por_kg = aereo_custo_por_kg;
+                    if (peso) {
+                        value = custo_por_kg * peso;
+                    } else {
+                        value = custo_por_kg; // Retorna custo por kg se peso não for informado
+                    }
+                    break;
+                default:
+                    value = 0;
+            }
+            return { value: value, time: tempo_medio, custo_por_kg: custo_por_kg };
+        }
+
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(value).replace('$', '');
+        }
+
+        function getModalDescription(modal, peso) {
+            switch (modal) {
+                case 'maritimo':
+                    return 'Custo aproximado de frete (Container Fechado)';
+                case 'aereo':
+                    if (peso) {
+                        return 'Custo aproximado de frete (Embarque Aéreo)';
+                    } else {
+                        return 'Custo por kilo (Embarque Aéreo)';
+                    }
+                default:
+                    return 'Frete médio estimado';
+            }
+        }
+
+        // Funções para cálculo do seguro
+        function calculateSeguro() {
+            if (seguroAtivo) {
+                const freteValue = parseFloat(freteInternacionalInput.value.replace(/[^0-9.-]+/g," ").replace(' ', ''));
+                const valorSeguro = (custoMercadoria + freteValue) * percentualSeguro;
+                seguroCargaInput.value = formatCurrency(valorSeguro);
+            } else {
+                seguroCargaInput.value = formatCurrency(0);
+            }
+        }
+
+        function toggleSemSeguro() {
+            seguroAtivo = !seguroAtivo;
+            if (!seguroAtivo) {
+                seguroCargaInput.value = formatCurrency(0);
+                seguroCargaInput.setAttribute('readonly', true);
+                seguroCargaInput.style.backgroundColor = '#e9ecef';
+                btnSemSeguro.textContent = 'Com Seguro';
+                btnSemSeguro.classList.remove('btn-light');
+                btnSemSeguro.classList.add('btn-warning');
+            } else {
+                calculateSeguro();
+                seguroCargaInput.removeAttribute('readonly');
+                seguroCargaInput.style.backgroundColor = '#f9f9f9';
+                btnSemSeguro.textContent = 'Sem Seguro';
+                btnSemSeguro.classList.remove('btn-warning');
+                btnSemSeguro.classList.add('btn-light');
+            }
+        }
+
+        // Funções para controle do modal de coberturas
+        function openModalCoberturas() {
+            modalCoberturasOverlay.classList.add('active');
+        }
+
+        function closeModalCoberturas() {
+            modalCoberturasOverlay.classList.remove('active');
+        }
+
+        // Event Listeners
+        btnCustoMedioFrete.addEventListener('click', openModalFrete);
+        modalClose.addEventListener('click', closeModalFrete);
+        btnCancelarModal.addEventListener('click', closeModalFrete);
+        btnCancelarResultado.addEventListener('click', closeModalFrete);
+        btnSemSeguro.addEventListener('click', toggleSemSeguro);
+        btnVerCoberturas.addEventListener('click', openModalCoberturas);
+        modalCoberturasClose.addEventListener('click', closeModalCoberturas);
+
+        modalFreteOverlay.addEventListener('click', function(e) {
+            if (e.target === modalFreteOverlay) {
+                closeModalFrete();
+            }
+        });
+
+        modalCoberturasOverlay.addEventListener('click', function(e) {
+            if (e.target === modalCoberturasOverlay) {
+                closeModalCoberturas();
+            }
+        });
+
+        modalFrete.addEventListener('change', function() {
+            if (modalFrete.value === 'aereo') {
+                ncmField.style.display = 'block';
+                pesoMercadoriaField.style.display = 'block';
+            } else {
+                ncmField.style.display = 'none';
+                pesoMercadoriaField.style.display = 'none';
+                ncmSelect.value = '';
+                pesoMercadoriaInput.value = '';
+            }
+        });
+
+        btnCalcularFrete.addEventListener('click', function() {
+            if (!validateFormFrete()) {
+                alert('Por favor, preencha todos os campos obrigatórios.');
+                return;
+            }
+
+            showLoadingStep();
+
+            // Simular consulta por 3.5 segundos
+            setTimeout(function() {
+                const pais = paisOrigem.value;
+                const modal = modalFrete.value;
+                const peso = parseFloat(pesoMercadoriaInput.value);
+                
+                const result = calculateFrete(pais, modal, peso);
+                calculatedValue = result.value;
+                
+                resultDescription.textContent = getModalDescription(modal, peso);
+                resultTime.textContent = result.time;
+
+                if (modal === 'aereo' && !peso) {
+                    resultValue.textContent = 'U$ ' + formatCurrency(result.custo_por_kg) + ' / kg';
+                } else {
+                    resultValue.textContent = 'U$ ' + formatCurrency(calculatedValue);
+                }
+                
+                showResultStep();
+            }, 3500);
+        });
+
+        btnNovaConsulta.addEventListener('click', function() {
+            resetFormFrete();
+            showFormStep();
+        });
+
+        btnImportarValor.addEventListener('click', function() {
+            if (calculatedValue > 0) {
+                freteInternacionalInput.value = formatCurrency(calculatedValue);
+                freteInternacionalInput.classList.add('flash-red-more');
+                setTimeout(() => {
+                    freteInternacionalInput.classList.remove('flash-red-more');
+                    calculateSeguro(); // Recalcula o seguro após importar o frete
+                }, 2500); 
+                closeModalFrete();
+            }
+        });
+
+        // Adicionar interatividade aos itens do menu
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Adicionar funcionalidade aos botões existentes
+        document.querySelector('.btn-primary').addEventListener('click', function() {
+            alert('Função: Editar Cotação');
+        });
+
+        document.querySelector('.btn-secondary').addEventListener('click', function() {
+            alert('Função: Vincular Ordem de compra');
+        });
+
+        document.querySelector('.btn-outline').addEventListener('click', function() {
+            alert('Função: Retornar');
+        });
+
+        // Inicializar cálculo do seguro ao carregar a página
+        document.addEventListener('DOMContentLoaded', calculateSeguro);
+    </script>
+</body>
+</html>
+
+
